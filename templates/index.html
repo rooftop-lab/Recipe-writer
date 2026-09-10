@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilingual Recipe Generator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            max-width: 640px;
+            width: 100%;
+            padding: 40px;
+        }
+        .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .card-subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+        .badge {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.15s ease-in-out;
+            background-color: #ffffff;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+        .help-text {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+        .btn-submit {
+            width: 100%;
+            background-color: #1e3a8a;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+            margin-top: 8px;
+        }
+        .btn-submit:hover {
+            background-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1 class="card-title">Bilingual Recipe PDF Generator</h1>
+        <p class="card-subtitle">Extract video transcripts into print-ready kitchen reference sheets.</p>
+
+        <form action="/generate" method="POST" target="_blank">
+            <div class="form-group">
+                <label class="form-label">YouTube Video URL</label>
+                <input type="text" name="url" class="form-input" placeholder="https://www.youtube.com/watch?v=..." value="https://www.youtube.com/watch?v=Ka6wZvC1yJk" required>
+                <p class="help-text">Paste any recipe video link containing speech or transcript captions.</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    Secondary Language
+                    <span class="badge">English Included</span>
+                </label>
+                <select name="language" class="form-select">
+                    <option value="ta" selected>Tamil (தமிழ்)</option>
+                    <option value="hi">Hindi (हिन्दी)</option>
+                    <option value="te">Telugu (தெலுங்கு/తెలుగు)</option>
+                    <option value="kn">Kannada (கன்னடம்/கன்னட)</option>
+                    <option value="ml">Malayalam (மலையாளம்)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Custom Instructions / Prompt (Optional)</label>
+                <textarea name="instructions" class="form-textarea" placeholder="e.g., Scale ingredients for 4 servings; clarify tempering steps."></textarea>
+                <p class="help-text">Add custom tweaks for scaling, dietary preferences, or specific notes.</p>
+            </div>
+
+            <button type="submit" class="btn-submit">Generate PDF Sheet</button>
+        </form>
+    </div>
+</body>
+</html>
