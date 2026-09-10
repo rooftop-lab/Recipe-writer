@@ -1,5 +1,6 @@
 import os
 import urllib.request
+import io
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import (
     SimpleDocTemplate,
@@ -13,20 +14,24 @@ from reportlab.platypus import (
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.pdfmetrics import registerFontFamily
 from reportlab.lib import colors
 
 def ensure_font():
-    font_path = "NotoSansTamil.ttf"
+    font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "NotoSansTamil.ttf")
     if not os.path.exists(font_path):
         url = "https://raw.githubusercontent.com/google/fonts/main/ofl/notosanstamil/NotoSansTamil%5Bwdth%2Cwght%5D.ttf"
         urllib.request.urlretrieve(url, font_path)
-    pdfmetrics.registerFont(TTFont("NotoSansTamil", font_path))
 
-def create_recipe_pdf(output_filename="travel_premix_recipes_bilingual.pdf"):
+    pdfmetrics.registerFont(TTFont("NotoSansTamil", font_path))
+    pdfmetrics.registerFont(TTFont("NotoSansTamil-Bold", font_path))
+    registerFontFamily("NotoSansTamil", normal="NotoSansTamil", bold="NotoSansTamil-Bold", italic="NotoSansTamil", boldItalic="NotoSansTamil-Bold")
+
+def create_recipe_pdf(output_filename_or_buffer="travel_premix_recipes_bilingual.pdf", video_url=None, language="ta", custom_instructions=None):
     ensure_font()
 
     doc = SimpleDocTemplate(
-        output_filename,
+        output_filename_or_buffer,
         pagesize=letter,
         rightMargin=36,
         leftMargin=36,
@@ -75,7 +80,6 @@ def create_recipe_pdf(output_filename="travel_premix_recipes_bilingual.pdf"):
         fontName="NotoSansTamil",
         fontSize=10,
         leading=13,
-        fontStyle="bold",
         textColor=colors.white,
         alignment=0
     )
@@ -102,7 +106,13 @@ def create_recipe_pdf(output_filename="travel_premix_recipes_bilingual.pdf"):
 
     # Title & Header
     story.append(Paragraph("Travel Premix Recipes / பயணத்திற்கான இன்ஸ்டன்ட் ப்ரீமிக்ஸ் ரெசிபிகள்", title_style))
-    story.append(Paragraph("<b>Source Video:</b> Just Add Hot Water - Perfect Travel Premix Recipe Ideas (Hebbar's Kitchen)<br/><b>Format:</b> Bilingual Table (English & Tamil / ஆங்கிலம் மற்றும் தமிழ்)", subtitle_style))
+    url_text = video_url if video_url else "https://www.youtube.com/watch?v=Ka6wZvC1yJk"
+
+    sub_text = f"<b>Source Video:</b> {url_text}<br/><b>Format:</b> Bilingual Table (English & Tamil / ஆங்கிலம் மற்றும் தமிழ்)"
+    if custom_instructions:
+        sub_text += f"<br/><b>Notes / Customization:</b> {custom_instructions}"
+
+    story.append(Paragraph(sub_text, subtitle_style))
     story.append(HRFlowable(width="100%", thickness=1.5, color=colors.HexColor("#CBD5E0"), spaceAfter=15))
 
     recipes = [
@@ -275,7 +285,6 @@ def create_recipe_pdf(output_filename="travel_premix_recipes_bilingual.pdf"):
         story.append(KeepTogether(recipe_story))
 
     doc.build(story)
-    print(f"Successfully generated {output_filename}")
 
 if __name__ == "__main__":
-    create_recipe_pdf()
+    create_recipe_pdf("travel_premix_recipes_bilingual.pdf")
